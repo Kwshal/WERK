@@ -1,0 +1,7 @@
+timestamps of clock in and clock out
+
+worked hours in a day
+worked hours in a week
+worked hours in a month
+
+extra hours in a 

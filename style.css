@@ -1,0 +1,13 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+    font-family: sans-serif;
+    
+}
+
+#entry {
+    color: #44ce1a;
+
+}
