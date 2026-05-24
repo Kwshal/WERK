@@ -1,126 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Work Journal</title>
-
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial,sans-serif;
-    }
-
-    body{
-      background:#111;
-      color:white;
-      padding:20px;
-    }
-
-    h1{
-      text-align:center;
-      margin-bottom:20px;
-    }
-
-    .container{
-      max-width:700px;
-      margin:auto;
-    }
-
-    .card{
-      background:#1e1e1e;
-      padding:20px;
-      border-radius:12px;
-      margin-bottom:20px;
-    }
-
-    label{
-      display:block;
-      margin-top:12px;
-      margin-bottom:5px;
-      font-size:14px;
-    }
-
-    input{
-      width:100%;
-      padding:10px;
-      border:none;
-      border-radius:8px;
-      background:#2c2c2c;
-      color:white;
-    }
-
-    button{
-      margin-top:15px;
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:8px;
-      background:#4caf50;
-      color:white;
-      font-size:16px;
-      cursor:pointer;
-    }
-
-    button:hover{
-      opacity:0.9;
-    }
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:10px;
-    }
-
-    th,td{
-      border:1px solid #333;
-      padding:10px;
-      text-align:center;
-    }
-
-    th{
-      background:#222;
-    }
-
-    .delete-btn{
-      background:#e53935;
-      padding:6px 10px;
-      border:none;
-      border-radius:5px;
-      color:white;
-      cursor:pointer;
-    }
-
-    .total{
-      margin-top:15px;
-      font-size:18px;
-      text-align:right;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
   <div class="container">
 
-    <h1>Work Clock Journal</h1>
+    <h1>Work Journal</h1>
 
-    <div class="card">
-
-      <label>Date</label>
-      <input type="date" id="date">
-
-      <label>Clock In</label>
-      <input type="time" id="clockIn">
-
-      <label>Clock Out</label>
-      <input type="time" id="clockOut">
-
-      <button onclick="addEntry()">Save Entry</button>
-
-    </div>
+    <select name="months" id="months">
+      <option value="Jan-14">January</option>
+      <option value="Feb-28">February</option>
+      <option value="Mar-31">March</option>
+      <option value="Apr-30">April</option>
+      <option value="May-31">May</option>
+      <option value="Jun-30">June</option>
+      <option value="Jul-31">July</option>
+      <option value="Aug-31">August</option>
+      <option value="Sep-30">September</option>
+      <option value="Oct-31">October</option>
+      <option value="Nov-30">November</option>
+      <option value="Dec-31">December</option>
+      <option value="all">All Months</option>
+    </select>
 
     <div class="card">
 
@@ -128,111 +36,29 @@
         <thead>
           <tr>
             <th>Date</th>
-            <th>Clock In</th>
-            <th>Clock Out</th>
-            <th>Hours</th>
-            <th>Delete</th>
+            <th>Entry</th>
+            <th>Exit</th>
+            <th>+Hours</th>
           </tr>
         </thead>
 
-        <tbody id="journalBody"></tbody>
+        <tbody id="journalBody">
+          <!-- EXAMPLE -->
+          <tr>
+            <td>2024-01-01</td>
+            <td>11:00</td> 
+            <td>19:30</td>
+            <td>8.00</td>
+          </tr>
+        </tbody>
       </table>
-
-      <div class="total" id="totalHours">
-        Total Hours: 0
-      </div>
 
     </div>
 
   </div>
 
-  <script>
-    let entries = JSON.parse(localStorage.getItem("workJournal")) || [];
-
-    function calculateHours(start, end){
-      let startTime = new Date(`2000-01-01T${start}`);
-      let endTime = new Date(`2000-01-01T${end}`);
-
-      let diff = (endTime - startTime) / (1000 * 60 * 60);
-
-      if(diff < 0){
-        diff += 24;
-      }
-
-      return diff.toFixed(2);
-    }
-
-    function saveData(){
-      localStorage.setItem("workJournal", JSON.stringify(entries));
-    }
-
-    function renderEntries(){
-
-      const body = document.getElementById("journalBody");
-      const totalDisplay = document.getElementById("totalHours");
-
-      body.innerHTML = "";
-
-      let total = 0;
-
-      entries.forEach((entry,index)=>{
-
-        total += Number(entry.hours);
-
-        body.innerHTML += `
-          <tr>
-            <td>${entry.date}</td>
-            <td>${entry.clockIn}</td>
-            <td>${entry.clockOut}</td>
-            <td>${entry.hours}</td>
-            <td>
-              <button class="delete-btn" onclick="deleteEntry(${index})">
-                X
-              </button>
-            </td>
-          </tr>
-        `;
-      });
-
-      totalDisplay.innerText = `Total Hours: ${total.toFixed(2)}`;
-    }
-
-    function addEntry(){
-
-      const date = document.getElementById("date").value;
-      const clockIn = document.getElementById("clockIn").value;
-      const clockOut = document.getElementById("clockOut").value;
-
-      if(!date || !clockIn || !clockOut){
-        alert("Fill all fields.");
-        return;
-      }
-
-      const hours = calculateHours(clockIn, clockOut);
-
-      entries.push({
-        date,
-        clockIn,
-        clockOut,
-        hours
-      });
-
-      saveData();
-      renderEntries();
-
-      document.getElementById("date").value = "";
-      document.getElementById("clockIn").value = "";
-      document.getElementById("clockOut").value = "";
-    }
-
-    function deleteEntry(index){
-      entries.splice(index,1);
-      saveData();
-      renderEntries();
-    }
-
-    renderEntries();
-  </script>
+  <script src="index.js"></script>
 
 </body>
+
 </html>
